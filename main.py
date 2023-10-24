@@ -1,35 +1,35 @@
-def maksymaLokalneIndeksy(blocks):
+def localMaximumBlocksIndexes(blocks):
 
-    maksymaLokalneBloki = []
+    localMaxIndexes = []
 
     for i in range(0, len(blocks)):
         if i == 0:
             if blocks[i] > blocks[i+1]:
-                maksymaLokalneBloki.append(i)
+                localMaxIndexes.append(i)
         if i < len(blocks) - 1 and i > 0:
             if blocks[i] > blocks[i-1] and blocks[i] > blocks[i+1]:
-                maksymaLokalneBloki.append(i)
+                localMaxIndexes.append(i)
         if i == len(blocks) - 1:
             if blocks[i] > blocks[i-1]:
-                maksymaLokalneBloki.append(i)
+                localMaxIndexes.append(i)
 
-    return maksymaLokalneBloki
+    return localMaxIndexes
 
-def maksymaLokalneWysokosci(blocks):
-    maksymaLokalneBloki = []
+def localMaximaBlocksHeights(blocks):
+    localMaxHeights = []
 
     for i in range(0, len(blocks)):
         if i == 0:
             if blocks[i] > blocks[i + 1]:
-                maksymaLokalneBloki.append(blocks[i])
+                localMaxHeights.append(blocks[i])
         if i < len(blocks) - 1 and i > 0:
             if blocks[i] > blocks[i - 1] and blocks[i] > blocks[i + 1]:
-                maksymaLokalneBloki.append(blocks[i])
+                localMaxHeights.append(blocks[i])
         if i == len(blocks) - 1:
             if blocks[i] > blocks[i - 1]:
-                maksymaLokalneBloki.append(blocks[i])
+                localMaxHeights.append(blocks[i])
 
-    return maksymaLokalneBloki
+    return localMaxHeights
 
 def highestBlock(blocks):
 
@@ -50,31 +50,28 @@ def material(blocks):
     #counting capacity on the right
 
     blocksOnTheLeft = blocks[0:blocks.index(startingBlock)]
-    indeksyMaksym = maksymaLokalneIndeksy(blocksOnTheLeft)
-    wysokosciMaksym = maksymaLokalneWysokosci(blocksOnTheLeft)
+    leftsideMaxHeights = localMaximaBlocksHeights(blocksOnTheLeft)
     currentMaxIndex = blocks.index(startingBlock)
 
-    while len(blocksOnTheLeft) != 0 and len(wysokosciMaksym) != 0:
-        nextMaxIndex = blocksOnTheLeft.index(highestBlock(wysokosciMaksym))
+    while len(blocksOnTheLeft) != 0 and len(leftsideMaxHeights) != 0:
+        nextMaxIndex = blocksOnTheLeft.index(highestBlock(leftsideMaxHeights))
         for i in reversed(range(nextMaxIndex, currentMaxIndex)):
             capacityOnTheLeft += blocksOnTheLeft[nextMaxIndex] - blocksOnTheLeft[i]
 
-        del wysokosciMaksym[wysokosciMaksym.index(blocksOnTheLeft[nextMaxIndex]):len(wysokosciMaksym)]
+        del leftsideMaxHeights[leftsideMaxHeights.index(blocksOnTheLeft[nextMaxIndex]):len(leftsideMaxHeights)]
         del blocksOnTheLeft[currentMaxIndex:len(blocksOnTheLeft)]
         currentMaxIndex = nextMaxIndex
 
 
     blocksOnTheRight = blocks[blocks.index(startingBlock)+1:len(blocks)]
-    indeksyMaksym = maksymaLokalneIndeksy(blocksOnTheRight)
-    wysokosciMaksym = maksymaLokalneWysokosci(blocksOnTheRight)
-    currentMaxIndex = blocks.index(startingBlock)
+    rightsideMaxHeights = localMaximaBlocksHeights(blocksOnTheRight)
 
-    while len(blocksOnTheRight) != 0 and len(wysokosciMaksym) != 0:
-        nextMaxIndex = blocksOnTheRight.index(highestBlock(wysokosciMaksym))
+    while len(blocksOnTheRight) != 0 and len(rightsideMaxHeights) != 0:
+        nextMaxIndex = blocksOnTheRight.index(highestBlock(rightsideMaxHeights))
         for i in range(0, nextMaxIndex):
             capacityOnTheRight += blocksOnTheRight[nextMaxIndex] - blocksOnTheRight[i]
 
-        del wysokosciMaksym[0:wysokosciMaksym.index(blocksOnTheRight[nextMaxIndex])+1]
+        del rightsideMaxHeights[0:rightsideMaxHeights.index(blocksOnTheRight[nextMaxIndex])+1]
         del blocksOnTheRight[0:nextMaxIndex+1]
         currentMaxIndex = nextMaxIndex
 
